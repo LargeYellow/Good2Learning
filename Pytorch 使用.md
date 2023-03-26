@@ -57,6 +57,70 @@ print(f"Random Tensor: \n {x_rand} \n")
 #         [0.7145, 0.5141]])
 ```
 
+
+
+## Pytorch创建神经网络
+
+导入必要的库和模块
+
+```python
+import torch
+import torch.nn as nn
+import torch.optim as optim
+```
+
+创建方法1：使用nn.Module基类创建网络
+
+```python
+class Net(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size):
+        super(Net, self).__init__()
+        self.fc1 = nn.Linear(input_size, hidden_size)
+        self.fc2 = nn.Linear(hidden_size, output_size)
+
+    def forward(self, x):
+        x = torch.relu(self.fc1(x))
+        out = torch.relu(self.fc2(x))
+        return out
+```
+
+创建方法2：使用nn.Sequential创建网络
+
+```python
+net = nn.Sequential(
+    nn.Linear(input_size, hidden_size),
+    nn.ReLU(),
+    nn.Linear(hidden_size, output_size),
+    nn.LogSoftmax(dim=1)
+)
+```
+
+创建方法3：结合nn.Module基类和nn.ModuleList()创建可变层数的网络
+
+```python
+class Actor(nn.Module):
+    def __init__(self, input_size, hidden_size, output_size, hidden_num):
+        super(Actor, self).__init__()
+        # 添加输入层、隐藏层、输出层
+        self.input_layer = nn.Linear(input_size, hidden_size)
+        self.hidden_layers = nn.ModuleList()
+        for i in range(hidden_num):
+            self.hidden_layers.append(nn.Linear(hidden_size, hidden_size))
+        self.output_layer = nn.Linear(hidden_size, output_size)
+    
+    # 定义前向传播
+    def forward(self, s):
+        s = torch.relu(self.input_layer(s))
+        for layer in self.hidden_layers:
+            s = torch.relu(layer(s))
+        out = torch.relu(s)
+        return out
+```
+
+## Pytorch创建损失函数
+
+
+
 ## 方法查询
 
 ```python
